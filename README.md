@@ -1,8 +1,19 @@
 # Bookmark-Plugin
 这是一个很好用、便捷的书签插件
+
+主要功能如下所示
+
+<img width="575" height="213" alt="image" src="https://github.com/user-attachments/assets/24ab38e5-2cae-425a-8be0-12c825b79e31" />
+
+点击小火箭图标可以一件打开此收藏夹里的所有链接，其他功能简单明了
+
+使用教程如下
+
 先将文件夹下载下来
 
 <img width="162" height="170" alt="image" src="https://github.com/user-attachments/assets/de1b5700-5983-4550-8675-84adabd15693" />
+
+里面有三个文件
 
 <img width="580" height="194" alt="image" src="https://github.com/user-attachments/assets/5ac295c8-543d-4d3e-92fb-2471c04d44cb" />
 
