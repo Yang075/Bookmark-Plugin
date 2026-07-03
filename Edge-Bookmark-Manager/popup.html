@@ -1,0 +1,301 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <title>多级书签管理器</title>
+  <style>
+    /* ================= 主题变量定义 ================= */
+    :root {
+      --bg-color: #f9f9f9;
+      --text-color: #333333;
+      --header-border: #e0e0e0;
+      --item-hover: #eaeaea;
+      --btn-bg: #eaeaea;
+      --btn-text: #333333;
+      --search-bg: #ffffff;
+      --search-border: #cccccc;
+      --accent-color: #0078d4;
+    }
+    
+    /* 2. 暗黑模式 */
+    body.theme-dark {
+      --bg-color: #1e1e1e;
+      --text-color: #d4d4d4;
+      --header-border: #3c3c3c;
+      --item-hover: #2a2a2a;
+      --btn-bg: #333333;
+      --btn-text: #cccccc;
+      --search-bg: #252526;
+      --search-border: #555555;
+      --accent-color: #0078d4;
+    }
+
+    /* 3. 极客绿模式 */
+    body.theme-green {
+      --bg-color: #0c100b;
+      --text-color: #00ff66;
+      --header-border: #004411;
+      --item-hover: #142214;
+      --btn-bg: #112211;
+      --btn-text: #00ff66;
+      --search-bg: #050805;
+      --search-border: #00aa33;
+      --accent-color: #00ff66;
+    }
+
+    /* 4. 樱花粉模式 */
+    body.theme-pink {
+      --bg-color: #fff0f5;
+      --text-color: #c71585;
+      --header-border: #ffb6c1;
+      --item-hover: #ffe4e1;
+      --btn-bg: #ffe4e1;
+      --btn-text: #c71585;
+      --search-bg: #ffffff;
+      --search-border: #ffb6c1;
+      --accent-color: #ff69b4;
+    }
+
+    /* 5. 远山蓝模式 */
+    body.theme-blue {
+      --bg-color: #1a2a3a;
+      --text-color: #e2f1ff;
+      --header-border: #2c3e50;
+      --item-hover: #2c3e50;
+      --btn-bg: #243447;
+      --btn-text: #a5d8ff;
+      --search-bg: #15202b;
+      --search-border: #38444d;
+      --accent-color: #38bdf8;
+    }
+
+    /* 6. 曜石紫模式 */
+    body.theme-purple {
+      --bg-color: #120a21;
+      --text-color: #e9d5ff;
+      --header-border: #3b0764;
+      --item-hover: #2e1065;
+      --btn-bg: #1e1135;
+      --btn-text: #d8b4fe;
+      --search-bg: #0f071e;
+      --search-border: #5b21b6;
+      --accent-color: #a855f7;
+    }
+
+    /* 7. 蜜橘橙模式 */
+    body.theme-orange {
+      --bg-color: #fff7ed;
+      --text-color: #431407;
+      --header-border: #ffedd5;
+      --item-hover: #ffedd5;
+      --btn-bg: #ffedd5;
+      --btn-text: #9a3412;
+      --search-bg: #ffffff;
+      --search-border: #fed7aa;
+      --accent-color: #ea580c;
+    }
+
+    /* 8. 大地棕模式 */
+    body.theme-brown {
+      --bg-color: #f4f0ea;
+      --text-color: #4a3728;
+      --header-border: #dcd1c4;
+      --item-hover: #e8dfd3;
+      --btn-bg: #eae3d8;
+      --btn-text: #5c4433;
+      --search-bg: #faf8f5;
+      --search-border: #c8b9a6;
+      --accent-color: #8b5a2b;
+    }
+
+    /* ================= 基础布局样式 ================= */
+    body {
+      width: 440px; 
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      padding: 10px;
+      margin: 0;
+      background-color: var(--bg-color);
+      color: var(--text-color);
+      font-size: 14px; 
+      transition: background-color 0.2s, color 0.2s;
+    }
+    
+    .header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 1px solid var(--header-border);
+      padding-bottom: 6px;
+      margin-bottom: 8px;
+    }
+    h3 { 
+      margin: 0; 
+      color: var(--accent-color); 
+      font-size: 1.2em;
+    }
+
+    .controls-wrapper {
+      display: flex;
+      gap: 6px;
+      align-items: center;
+    }
+    .btn-group {
+      display: flex;
+      gap: 3px;
+    }
+    
+    .top-btn {
+      background: var(--btn-bg);
+      color: var(--btn-text);
+      border: 1px solid var(--header-border);
+      border-radius: 4px;
+      padding: 3px 6px;
+      cursor: pointer;
+      font-size: 12px;
+      font-weight: bold;
+      user-select: none;
+    }
+    .top-btn:hover {
+      background: var(--accent-color);
+      color: var(--bg-color);
+    }
+
+    #create-folder-btn {
+      background: #e1f5fe;
+      color: #0288d1;
+      border-color: #b3e5fc;
+    }
+    body.theme-dark #create-folder-btn,
+    body.theme-green #create-folder-btn,
+    body.theme-blue #create-folder-btn,
+    body.theme-purple #create-folder-btn {
+      background: #112233;
+      color: #7dd3fc;
+      border-color: #0369a1;
+    }
+
+    /* ================= 功能区（搜索/备份） ================= */
+    .tool-bar {
+      display: flex;
+      gap: 8px;
+      margin-bottom: 10px;
+    }
+    .search-input {
+      flex-grow: 1;
+      padding: 4px 8px;
+      border: 1px solid var(--search-border);
+      border-radius: 4px;
+      background-color: var(--search-bg);
+      color: var(--text-color);
+      font-size: 12px;
+      outline: none;
+    }
+    
+    /* ================= 树状结构样式 ================= */
+    ul {
+      list-style-type: none;
+      padding-left: 1.2em; 
+      margin: 4px 0;
+    }
+    #bookmark-tree {
+      padding-left: 0; 
+      max-height: 420px; 
+      overflow-y: auto; 
+    }
+    li {
+      margin: 4px 0;
+      line-height: 1.6;
+    }
+    
+    .folder-item, .bookmark-item {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 2px 4px;
+      border-radius: 4px;
+    }
+    .folder-item:hover, .bookmark-item:hover {
+      background-color: var(--item-hover);
+    }
+
+    .folder {
+      font-weight: bold;
+      color: #e8a100;
+      cursor: pointer;
+      user-select: none;
+      flex-grow: 1; 
+    }
+    .folder::before { content: "📂 "; }
+    .folder.collapsed::before { content: "📁 "; }
+    
+    .bookmark {
+      display: inline-block;
+      text-decoration: none;
+      color: var(--text-color);
+      max-width: 240px; 
+      white-space: nowrap; 
+      overflow: hidden; 
+      text-overflow: ellipsis; 
+    }
+    .bookmark::before { content: "📄 "; }
+    .bookmark:hover {
+      color: var(--accent-color);
+      text-decoration: underline;
+    }
+    
+    /* ================= 操作按钮样式 ================= */
+    .action-btns {
+      opacity: 0; 
+      transition: opacity 0.15s;
+      display: flex;
+      gap: 6px; 
+    }
+    .bookmark-item:hover .action-btns,
+    .folder-item:hover .action-btns {
+      opacity: 1;
+    }
+    
+    .btn {
+      font-size: 0.9em; 
+      cursor: pointer;
+      user-select: none;
+    }
+    .edit-btn:hover, .copy-btn:hover { filter: brightness(0.7); }
+    .delete-btn:hover { filter: drop-shadow(0px 0px 2px red); }
+
+    .filtered-out {
+      display: none !important;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="header">
+    <h3>书签大管家</h3>
+    <div class="controls-wrapper">
+      <button class="top-btn" id="create-folder-btn" title="新建独立的一级分类">📁⁺ 新建分类</button>
+      <div class="btn-group">
+        <button class="top-btn" id="toggle-all-btn" data-status="collapsed" title="一键展开/折叠所有">📂⁺</button>
+      </div>
+      <div class="btn-group">
+        <button class="top-btn" id="theme-btn" title="切换主题皮肤">🎨 换肤</button>
+      </div>
+      <div class="btn-group">
+        <button class="top-btn" id="font-dec" title="缩小字体">A⁻</button>
+        <button class="top-btn" id="font-inc" title="放大字体">A⁺</button>
+      </div>
+    </div>
+  </div>
+  
+  <div class="tool-bar">
+    <input type="text" class="search-input" id="search-box" placeholder="🔍 输入关键词实时搜索书签...">
+    <button class="top-btn" id="export-btn" title="导出备份文件">📤 导出</button>
+    <button class="top-btn" id="import-btn" title="导入备份文件">📥 导入</button>
+    <input type="file" id="import-file-file" accept=".json" style="display: none;">
+  </div>
+
+  <ul id="bookmark-tree"></ul>
+
+  <script src="popup.js"></script>
+</body>
+</html>
