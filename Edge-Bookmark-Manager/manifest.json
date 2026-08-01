@@ -1,0 +1,13 @@
+{
+  "manifest_version": 3,
+  "name": "极简书签管理器",
+  "version": "1.0",
+  "description": "一个帮你快速查看和管理书签的 Edge 插件",
+  "permissions": [
+    "bookmarks"
+  ],
+  "action": {
+    "default_popup": "popup.html",
+    "default_title": "打开书签管理"
+  }
+}
